@@ -1,11 +1,25 @@
-nginx-proxy:
-  image: jwilder/nginx-proxy
-  container_name: nginx_proxy
-  restart: always
-  ports:
-    - '80:80'
-    - '443:443'
-  volumes:
-    - 'nginx_proxy_certs:/etc/nginx/certs'
-    - 'nginx_proxy_cache:/var/cache/nginx'
-    - '/var/run/docker.sock:/tmp/docker.sock:ro'
+version: '2'
+
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx_proxy
+    restart: always
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - 'certs:/etc/nginx/certs'
+      - 'cache:/var/cache/nginx'
+      - '/var/run/docker.sock:/tmp/docker.sock:ro'
+      - 'letsencrypt_etc:/etc/letsencrypt'
+      - 'letsencrypt_lib:/var/lib/letsencrypt'
+    network_mode: "bridge"
+
+volumes:
+  cache: {}
+  certs: {}
+  letsencrypt_etc:
+    external: true
+  letsencrypt_lib:
+    external: true
