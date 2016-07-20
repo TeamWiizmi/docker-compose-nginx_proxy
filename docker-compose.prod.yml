@@ -2,13 +2,12 @@ version: '2'
 
 services:
   nginx:
-    image: nginx:latest
+    image: nginx:alpine
     container_name: nginx
     restart: always
     ports:
       - '80:80'
       - '443:443'
-
     volumes:
       - 'certs:/etc/nginx/certs:ro'
       - 'cache:/var/cache/nginx'
@@ -17,7 +16,7 @@ services:
       - 'conf:/etc/nginx/conf.d'
     networks:
       - default
-      - overlay
+      # - overlay
 
   nginx-gen:
     image: jwilder/docker-gen:latest
@@ -45,9 +44,9 @@ services:
       - NGINX_DOCKER_GEN_CONTAINER=nginx-gen
 
 
-networks:
-  overlay:
-    driver: overlay
+# networks:
+#   overlay:
+#     driver: overlay
 
 volumes:
   cache: {}

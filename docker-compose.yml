@@ -2,19 +2,21 @@ version: '2'
 
 services:
   nginx:
-    image: nginx:latest
+    image: nginx:alpine
     container_name: nginx
     restart: always
     ports:
       - '80:80'
       - '443:443'
-    network_mode: bridge
+
     volumes:
       - 'certs:/etc/nginx/certs:ro'
       - 'cache:/var/cache/nginx'
       - 'vhost:/etc/nginx/vhost.d'
       - 'html:/usr/share/nginx/html'
       - 'conf:/etc/nginx/conf.d'
+    networks:
+      - default
 
   nginx-gen:
     image: jwilder/docker-gen:latest
@@ -26,7 +28,7 @@ services:
       - 'templates:/etc/docker-gen/templates'
       - '/var/run/docker.sock:/tmp/docker.sock:ro'
     command:  -notify-sighup nginx -watch -only-exposed /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
-
+    
 volumes:
   cache: {}
   certs: {}
